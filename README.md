@@ -28,6 +28,7 @@ All settings are in `config.json`.
 | `dataUrl` | Where the page loads events from. |
 | `fetchEveryMinutes` | How often the page reloads `events.json`. |
 | `renderEverySeconds` | How often the page updates the clock, countdown and featured event. |
+| `featureActiveEvent` | If `true`, an event that is happening now is the featured event. If `false`, the featured event is always the next one that has not started, and running events appear in the list marked "Nu". |
 | `listSize` | Number of events in the list, besides the featured one. |
 | `descriptionMaxChars` | Maximum length of the featured event's description. |
 

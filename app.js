@@ -63,7 +63,7 @@
     const upcoming = events.filter((e) => lastMoment(e) > now);
     const live = upcoming.filter((e) => e.s <= now).sort((a, b) => a.e - b.e);
     const future = upcoming.filter((e) => e.s > now);
-    const featured = live[0] || future[0];
+    const featured = (C.featureActiveEvent && live[0]) || future[0];
 
     const box = $('featured');
     const list = $('list');
@@ -78,7 +78,6 @@
 
     const isLive = featured.s <= now;
     box.className = 'ev-featured' + (isLive ? ' live' : '');
-    if (isLive) box.append(el('div', 'ev-badge', 'Nu'));
     box.append(el('h2', '', featured.title));
     box.append(el('div', 'ev-when', (isLive || dayKey(featured.s) === dayKey(now) ? '' : dayLabel(featured.s, now) + ' · ') + whenText(featured)));
     if (featured.location) box.append(el('div', 'ev-where', plainText(featured.location)));
