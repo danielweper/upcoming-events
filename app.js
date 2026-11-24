@@ -1,5 +1,5 @@
-(() => {
-  const C = window.CONFIG;
+(async () => {
+  const C = await fetch('config.json', { cache: 'no-store' }).then((r) => r.json());
   const $ = (id) => document.getElementById(id);
   let events = [];
   let updated = null;
@@ -144,6 +144,6 @@
 
   $('title').textContent = C.title;
   load();
-  setInterval(load, C.fetchEveryMs);
-  setInterval(render, C.renderEveryMs);
+  setInterval(load, C.fetchEveryMinutes * 60000);
+  setInterval(render, C.renderEverySeconds * 1000);
 })();

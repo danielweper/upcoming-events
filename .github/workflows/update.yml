@@ -30,12 +30,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node scripts/build-events.mjs
-        env:
-          ICS_URL: ${{ vars.ICS_URL }}   # optional; defaults to the fklub.dk feed
       - name: Stage site files
         run: |
           mkdir _site
-          cp index.html stregsystem.css events.css app.js config.js logo.svg events.json _site/
+          cp index.html stregsystem.css events.css app.js config.json logo.svg events.json _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }

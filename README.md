@@ -1,27 +1,43 @@
 # Upcoming events
 
-Static page that shows a featured event (the one happening now, otherwise the next one) plus a chronological list, from a public Google Calendar feed.
+A static page that shows upcoming events from a public Google Calendar: a featured event (the one happening now, otherwise the next one) and a chronological list of the events after it.
 
 ## How it works
-1. A GitHub Action (`update.yml`) runs every ~10 min, downloads the `.ics` feed, expands recurring events and builds `events.json` (next 90 days). The file is never committed: it is generated fresh and deployed straight to Pages, so the repo history stays clean.
-2. The page (`index.html` + `app.js`) re-fetches `events.json` every 5 min and re-renders every 15 s.
+1. A GitHub Action (`.github/workflows/update.yml`) runs about every 10 minutes. It downloads the calendar's `.ics` feed, expands recurring events and builds `events.json` with the events of the coming `horizonDays` days.
+2. The Action deploys the page and `events.json` to GitHub Pages. `events.json` is never committed.
+3. In the browser, `app.js` reloads `events.json` every `fetchEveryMinutes` minutes and re-renders every `renderEverySeconds` seconds.
 
-Expect calendar edits to show up on the TV after roughly 10–20 minutes.
+Calendar changes typically show up on the page within 10–20 minutes.
 
 ## Setup
-1. Create a GitHub repo and push this folder.
-2. **Settings → Pages → Source: GitHub Actions.**
-3. Optional: set repo variable `ICS_URL` (Settings → Secrets and variables → Actions → Variables) to use another feed. Default: `https://fklub.dk/ical/fember.ics`.
-4. Run **Actions → Update events → Run workflow** once. The site appears at `https://<user>.github.io/<repo>/`.
-5. Replace `logo.svg` with your logo (keep the filename, or update `index.html`).
+1. Push this repository to GitHub.
+2. Set `icsUrl` in `config.json` to your calendar's public `.ics` address.
+3. Under **Settings → Pages**, set **Source** to **GitHub Actions**.
+4. Run **Actions → Update events → Run workflow**. The site is then available at `https://<user>.github.io/<repo>/`.
 
-## Showing it on a TV
-It's an ordinary responsive webpage (light theme). Open it full-screen (F11) in any browser on the TV; it stays up to date by itself. Sizes scale with window width, so phones, laptops and big screens all work.
+## Configuration
+All settings are in `config.json`.
 
-## Local use
+| Setting | Description |
+|---|---|
+| `icsUrl` | Public `.ics` feed of the calendar (required). |
+| `horizonDays` | How many days ahead events are included. |
+| `title` | Heading shown in the header. |
+| `locale` | Language and format for dates and times. |
+| `timeZone` | Time zone used for event times and the clock. |
+| `dataUrl` | Where the page loads events from. |
+| `fetchEveryMinutes` | How often the page reloads `events.json`. |
+| `renderEverySeconds` | How often the page updates the clock, countdown and featured event. |
+| `listSize` | Number of events in the list, besides the featured one. |
+| `descriptionMaxChars` | Maximum length of the featured event's description. |
+
+The Action's schedule is set in `update.yml` (`cron`). The logo is `logo.svg`.
+
+## Running locally
+The page must be served over HTTP; opening `index.html` directly from disk doesn't work.
+
 ```
 npm install
-npm run build:events    # refresh events.json
-npm run serve           # http://localhost:3000
+npm run build:events    # creates events.json
+npm run serve           # serves the page locally
 ```
-Tweak titles, list size and timings in `config.js`.

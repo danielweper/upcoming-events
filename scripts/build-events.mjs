@@ -1,15 +1,18 @@
 // Downloads the public .ics feed, expands recurring events and writes events.json
 // containing only events that are not over yet, within the next HORIZON_DAYS.
-// Usage: node scripts/build-events.mjs   (ICS_URL env var overrides the default feed)
+// Usage: node scripts/build-events.mjs   (icsUrl / horizonDays / timeZone come from config.json)
 
-// All-day events are "floating" dates; pin the zone so they become Copenhagen midnight.
-process.env.TZ = 'Europe/Copenhagen';
+import { readFile, writeFile } from 'node:fs/promises';
 
-import { writeFile } from 'node:fs/promises';
-import ical from 'node-ical';
+const cfg = JSON.parse(await readFile(new URL('../config.json', import.meta.url), 'utf8'));
+if (!cfg.icsUrl) throw new Error('config.json: "icsUrl" is required (the public .ics feed URL).');
 
-const ICS_URL = process.env.ICS_URL || 'https://fklub.dk/ical/fember.ics';
-const HORIZON_DAYS = Number(process.env.HORIZON_DAYS || 90);
+// All-day events are "floating" dates; pin the zone so they become local midnight.
+process.env.TZ = cfg.timeZone || 'Europe/Copenhagen';
+const { default: ical } = await import('node-ical');
+
+const ICS_URL = cfg.icsUrl;
+const HORIZON_DAYS = Number(cfg.horizonDays ?? 90);
 const OUT = new URL('../events.json', import.meta.url);
 
 const res = await fetch(ICS_URL, { redirect: 'follow' });
