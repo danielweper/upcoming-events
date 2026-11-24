@@ -59,9 +59,7 @@
 
   function render() {
     const now = new Date();
-    $('clock-time').textContent = timeF.format(now);
-    $('clock-date').textContent = clockDateF.format(now);
-
+    
     const upcoming = events.filter((e) => lastMoment(e) > now);
     const live = upcoming.filter((e) => e.s <= now).sort((a, b) => a.e - b.e);
     const future = upcoming.filter((e) => e.s > now);
