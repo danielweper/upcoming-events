@@ -10,7 +10,8 @@
   const dayKeyF = fmt({ year: 'numeric', month: '2-digit', day: '2-digit' });
   const dayLongF = fmt({ weekday: 'long', day: 'numeric', month: 'long' });
   const clockDateF = fmt({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const stampF = fmt({ day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  // Browser-local time zone (no timeZone option), unlike the event times above.
+  const stampF = new Intl.DateTimeFormat(C.locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 
   const dayKey = (d) => dayKeyF.format(d);
   const el = (tag, cls, text) => {
@@ -74,17 +75,15 @@
     if (!featured) {
       box.className = 'ev-empty';
       box.textContent = 'Ingen kommende arrangementer';
-      $('upcoming-heading').hidden = true;
       return renderStatus(now);
     }
-    $('upcoming-heading').hidden = false;
 
     const isLive = featured.s <= now;
     box.className = 'ev-featured' + (isLive ? ' live' : '');
-    box.append(el('div', 'ev-badge', isLive ? 'Nu' : 'Næste'));
+    if (isLive) box.append(el('div', 'ev-badge', 'Nu'));
     box.append(el('h2', '', featured.title));
     box.append(el('div', 'ev-when', (isLive || dayKey(featured.s) === dayKey(now) ? '' : dayLabel(featured.s, now) + ' · ') + whenText(featured)));
-    if (featured.location) box.append(el('div', 'ev-where', '📍 ' + plainText(featured.location)));
+    if (featured.location) box.append(el('div', 'ev-where', plainText(featured.location)));
     box.append(el('div', 'ev-countdown', isLive ? `Slutter om ${countdown(featured.e - now)}` : `Starter om ${countdown(featured.s - now)}`));
     const desc = trim(plainText(featured.description), C.descriptionMaxChars);
     if (desc) box.append(el('div', 'ev-desc', desc));
@@ -121,11 +120,12 @@
 
   function renderStatus(now) {
     const s = $('status');
-    const age = updated ? now - updated : Infinity;
-    const stale = fetchFailed || age > C.staleAfterMs;
+    // "updated" = when this browser last downloaded events.json successfully.
+    // (events.json's own timestamp only changes when events change, so it isn't a useful freshness signal.)
+    const stale = fetchFailed;
     s.className = 'ev-status' + (stale ? ' warn' : '');
     s.textContent = updated
-      ? `${stale ? 'Data kan være forældet · ' : ''}Sidst opdateret ${stampF.format(updated)}`
+      ? `${stale ? 'Kunne ikke hente nye data · ' : ''}Sidst opdateret ${stampF.format(updated)}`
       : 'Henter arrangementer…';
   }
 
@@ -135,7 +135,7 @@
       if (!r.ok) throw new Error(r.status);
       const j = await r.json();
       events = (j.events || []).map(parse);
-      updated = new Date(j.updated);
+      updated = new Date();
       fetchFailed = false;
     } catch (err) {
       fetchFailed = true; // keep showing the last good data

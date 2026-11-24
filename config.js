@@ -8,5 +8,4 @@ window.CONFIG = {
   renderEveryMs: 15 * 1000,      // re-evaluate "now" (drops ended events, rolls the featured one)
   listSize: 7,                   // events shown in the list (besides the featured one)
   descriptionMaxChars: 220,
-  staleAfterMs: 60 * 60 * 1000,  // show a warning if data is older than this
 };

@@ -38,13 +38,12 @@ header .logo { height: 3.2em; width: auto; display: block; }
 .ev-desc { color: #444; }
 
 /* Upcoming list */
-.ev-upcoming h2 { font-size: 1.1em; text-align: center; margin: 0 0 .6em; }
 table.ev-list { width: 100%; border-collapse: separate; }
 table.ev-list th.ev-day { text-align: left; background: #eee; }
 table.ev-list td.ev-time { width: 5.5em; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
 table.ev-list td.ev-name { font-weight: bold; overflow-wrap: anywhere; }
 table.ev-list td.ev-name small { display: block; font-weight: normal; color: #666; }
 
-.ev-empty { border: 1px outset black; padding: 2em; text-align: center; font-size: 1.4em; color: #666; grid-column: 1 / -1; }
+.ev-empty { padding: 2em 0; text-align: center; font-size: 1.4em; color: #666; grid-column: 1 / -1; }
 .ev-status { margin: .6em 0; color: #666; font-size: .9em; }
 .ev-status.warn { color: red; }
