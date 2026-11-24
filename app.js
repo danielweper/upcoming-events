@@ -72,7 +72,7 @@
     list.replaceChildren();
 
     if (!featured) {
-      box.className = 'empty';
+      box.className = 'ev-empty';
       box.textContent = 'Ingen kommende arrangementer';
       $('upcoming-heading').hidden = true;
       return renderStatus(now);
@@ -80,28 +80,41 @@
     $('upcoming-heading').hidden = false;
 
     const isLive = featured.s <= now;
-    box.className = 'featured' + (isLive ? ' live' : '');
-    box.append(el('div', 'badge', isLive ? 'Nu' : 'Næste'));
+    box.className = 'ev-featured' + (isLive ? ' live' : '');
+    box.append(el('div', 'ev-badge', isLive ? 'Nu' : 'Næste'));
     box.append(el('h2', '', featured.title));
-    box.append(el('div', 'when', (isLive || dayKey(featured.s) === dayKey(now) ? '' : dayLabel(featured.s, now) + ' · ') + whenText(featured)));
-    if (featured.location) box.append(el('div', 'where', '📍 ' + plainText(featured.location)));
-    box.append(el('div', 'countdown', isLive ? `Slutter om ${countdown(featured.e - now)}` : `Starter om ${countdown(featured.s - now)}`));
+    box.append(el('div', 'ev-when', (isLive || dayKey(featured.s) === dayKey(now) ? '' : dayLabel(featured.s, now) + ' · ') + whenText(featured)));
+    if (featured.location) box.append(el('div', 'ev-where', '📍 ' + plainText(featured.location)));
+    box.append(el('div', 'ev-countdown', isLive ? `Slutter om ${countdown(featured.e - now)}` : `Starter om ${countdown(featured.s - now)}`));
     const desc = trim(plainText(featured.description), C.descriptionMaxChars);
-    if (desc) box.append(el('div', 'desc', desc));
+    if (desc) box.append(el('div', 'ev-desc', desc));
 
     const rest = upcoming.filter((e) => e !== featured).sort((a, b) => a.s - b.s).slice(0, C.listSize);
+    const tbody = el('tbody');
     let lastDay = null;
     for (const e of rest) {
       const shown = e.s < now ? now : e.s;
       const k = dayKey(shown);
-      if (k !== lastDay) { list.append(el('div', 'day', dayLabel(shown, now))); lastDay = k; }
-      const row = el('div', 'item');
-      row.append(el('div', 't', e.allDay ? 'Hele dagen' : e.s <= now ? 'Nu' : timeF.format(e.s)));
-      const name = el('div', 'n', e.title);
+      if (k !== lastDay) {
+        const tr = el('tr');
+        const th = el('th', 'ev-day', dayLabel(shown, now));
+        th.colSpan = 2;
+        tr.append(th);
+        tbody.append(tr);
+        lastDay = k;
+      }
+      const row = el('tr');
+      row.append(el('td', 'ev-time', e.allDay ? 'Hele dagen' : e.s <= now ? 'Nu' : timeF.format(e.s)));
+      const name = el('td', 'ev-name', e.title);
       const loc = plainText(e.location);
-      if (loc) name.append(el('span', 'l', loc));
+      if (loc) name.append(el('small', '', loc));
       row.append(name);
-      list.append(row);
+      tbody.append(row);
+    }
+    if (rest.length) {
+      const table = el('table', 'default ev-list');
+      table.append(tbody);
+      list.append(table);
     }
     renderStatus(now);
   }
@@ -110,7 +123,7 @@
     const s = $('status');
     const age = updated ? now - updated : Infinity;
     const stale = fetchFailed || age > C.staleAfterMs;
-    s.className = 'status' + (stale ? ' warn' : '');
+    s.className = 'ev-status' + (stale ? ' warn' : '');
     s.textContent = updated
       ? `${stale ? 'Data kan være forældet · ' : ''}Sidst opdateret ${stampF.format(updated)}`
       : 'Henter arrangementer…';

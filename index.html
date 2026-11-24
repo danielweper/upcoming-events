@@ -1,32 +1,36 @@
-<!doctype html>
-<html lang="da">
+<!DOCTYPE html>
+<html lang="da-DK">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kommende arrangementer</title>
-  <link rel="icon" href="logo.svg">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<title>Kommende arrangementer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="logo.svg">
+<!-- stregsystem.css is copied from https://stregdle.fklub.dk/static/productdle/stregsystem.css -->
+<link rel="stylesheet" href="stregsystem.css">
+<link rel="stylesheet" href="events.css">
 </head>
 <body>
-  <header class="top">
-    <div>
-      <h1 id="title">Kommende arrangementer</h1>
-      <div class="clock"><span id="clock-time"></span> <span id="clock-date"></span></div>
-    </div>
-    <img class="logo" src="logo.svg" alt="Logo">
-  </header>
+<header>
+  <div class="left clock"><span id="clock-time"></span> <span id="clock-date"></span></div>
+  <h1 id="title">Kommende arrangementer</h1>
+  <div class="right"><img class="logo" src="logo.svg" alt="Logo"></div>
+</header>
 
-  <main>
-    <section id="featured" class="featured" aria-live="polite"></section>
-    <section class="upcoming">
+<div id="base-content">
+  <div class="ev-wrap">
+    <section id="featured" class="ev-featured" aria-live="polite"></section>
+    <section class="ev-upcoming">
       <h2 id="upcoming-heading">Derefter</h2>
       <div id="list"></div>
     </section>
-  </main>
+  </div>
+</div>
 
-  <footer id="status" class="status"></footer>
+<footer>
+  <p id="status" class="ev-status"></p>
+</footer>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@ jobs:
       - name: Stage site files
         run: |
           mkdir _site
-          cp index.html style.css app.js config.js logo.svg events.json _site/
+          cp index.html stregsystem.css events.css app.js config.js logo.svg events.json _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }
