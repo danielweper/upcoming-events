@@ -1,0 +1,55 @@
+name: Update events
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # GitHub may delay this by several minutes
+  workflow_dispatch:
+  push:
+    paths: ['scripts/**', 'package.json', '.github/workflows/update.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-events
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/build-events.mjs
+        env:
+          ICS_URL: ${{ vars.ICS_URL }}   # optional; defaults to the fklub.dk feed
+      - name: Commit if changed (ignoring the timestamp)
+        id: commit
+        run: |
+          # Only commit when the event list itself changed, so we don't churn history every 10 min.
+          if git show HEAD:events.json > old.json 2>/dev/null &&
+             [ "$(node -e "const f=p=>JSON.stringify(require(p).events);console.log(f('./old.json')===f('./events.json'))")" = "true" ]; then
+            echo "No event changes."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "events-bot"
+          git config user.email "events-bot@users.noreply.github.com"
+          git add events.json
+          git commit -m "Update events"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: update
+    # Scheduled runs only redeploy when events changed; manual/push runs always do.
+    if: needs.update.outputs.changed == 'true' || github.event_name != 'schedule'
+    uses: ./.github/workflows/pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

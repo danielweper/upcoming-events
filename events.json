@@ -1,0 +1,195 @@
+{
+ "updated": "2026-11-24T21:05:42.679Z",
+ "source": "https://fklub.dk/ical/fember.ics",
+ "events": [
+  {
+   "id": "7iq4n50bm14jqc6ut8t46c13tf@google.com@2026-11-26T16:00:00.000Z",
+   "title": "F-kult × TECH Girlies krea/movie night",
+   "start": "2026-11-26T16:00:00.000Z",
+   "end": "2026-11-26T21:00:00.000Z",
+   "allDay": false,
+   "location": "Cassiopeia - Institut for Datalogi, Selma Lagerløfs Vej 300, 9220 Aalborg, Danmark",
+   "description": ""
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2026-11-27T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2026-11-27T12:00:00.000Z",
+   "end": "2026-11-27T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "ccp68phgcormcb9g6pijab9k75i3abb170q62b9lcgr62eb2cgqjadhjck@google.com@2026-11-27T14:30:00.000Z",
+   "title": "Fjulestue",
+   "start": "2026-11-27T14:30:00.000Z",
+   "end": "2026-11-27T17:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": ""
+  },
+  {
+   "id": "3evfv9pepmkug6hbfohrdjgkcu@google.com@2026-12-03T15:15:00.000Z",
+   "title": "F-Kult: Jul",
+   "start": "2026-12-03T15:15:00.000Z",
+   "end": "2026-12-03T19:15:00.000Z",
+   "allDay": false,
+   "location": "Jægerstuen / Auditoriet",
+   "description": "Film 1: Klaus (2019)\nFilm 2: The Nightmare Before Christmas (1993)\nForeslået af Emborg"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2026-12-04T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2026-12-04T12:00:00.000Z",
+   "end": "2026-12-04T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "cdi64d9p6sp3ab9oc5i3gb9k6tj3ibb1cgo36b9g70o3ec9icoq3ce9nco@google.com@2026-12-04T16:00:00.000Z",
+   "title": "F-julefrokost",
+   "start": "2026-12-04T16:00:00.000Z",
+   "end": "2026-12-04T22:30:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": ""
+  },
+  {
+   "id": "s1n3oskftd1brrio6lrd11epag@google.com@2026-12-09T09:00:00.000Z",
+   "title": "Luciaoptog og Sidste fredagsfranskbrød",
+   "start": "2026-12-09T09:00:00.000Z",
+   "end": "2026-12-09T10:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": ""
+  },
+  {
+   "id": "56s0boc04tpi7vco2s1ahpa00e@google.com@2026-12-09T15:15:00.000Z",
+   "title": "F-Bogklubben",
+   "start": "2026-12-09T15:15:00.000Z",
+   "end": "2026-12-09T16:30:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": ""
+  },
+  {
+   "id": "3evfv9pepmkug6hbfohrdjgkcu@google.com@2026-12-10T15:15:00.000Z",
+   "title": "F-Kult: Oldies Special",
+   "start": "2026-12-10T15:15:00.000Z",
+   "end": "2026-12-10T19:15:00.000Z",
+   "allDay": false,
+   "location": "Jægerstuen / Auditoriet",
+   "description": "Film 1: ?\nFilm 2: ?\n \nFilm fra oldies"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2026-12-11T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2026-12-11T12:00:00.000Z",
+   "end": "2026-12-11T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2026-12-18T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2026-12-18T12:00:00.000Z",
+   "end": "2026-12-18T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2026-12-25T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2026-12-25T12:00:00.000Z",
+   "end": "2026-12-25T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-01-01T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-01-01T12:00:00.000Z",
+   "end": "2027-01-01T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-01-08T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-01-08T12:00:00.000Z",
+   "end": "2027-01-08T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-01-15T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-01-15T12:00:00.000Z",
+   "end": "2027-01-15T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-01-22T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-01-22T12:00:00.000Z",
+   "end": "2027-01-22T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-01-29T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-01-29T12:00:00.000Z",
+   "end": "2027-01-29T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-02-05T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-02-05T12:00:00.000Z",
+   "end": "2027-02-05T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-02-12T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-02-12T12:00:00.000Z",
+   "end": "2027-02-12T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "4pf7h27tl4v2u6om87npj69jg1@google.com@2027-02-19T12:00:00.000Z",
+   "title": "Kontortid",
+   "start": "2027-02-19T12:00:00.000Z",
+   "end": "2027-02-19T14:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": "Forstyrrelsen + Frivillige chiller i Jægerstuen"
+  },
+  {
+   "id": "45oca6h2vdrupha2sbe3j1fivg@google.com@2027-02-19T15:00:00.000Z",
+   "title": "Fastelavn (måske)",
+   "start": "2027-02-19T15:00:00.000Z",
+   "end": "2027-02-19T21:00:00.000Z",
+   "allDay": false,
+   "location": "",
+   "description": ""
+  }
+ ]
+}

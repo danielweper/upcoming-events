@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kommende arrangementer</title>
+  <link rel="icon" href="logo.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1 id="title">Kommende arrangementer</h1>
+      <div class="clock"><span id="clock-time"></span> <span id="clock-date"></span></div>
+    </div>
+    <img class="logo" src="logo.svg" alt="Logo">
+  </header>
+
+  <main>
+    <section id="featured" class="featured" aria-live="polite"></section>
+    <section class="upcoming">
+      <h2 id="upcoming-heading">Derefter</h2>
+      <div id="list"></div>
+    </section>
+  </main>
+
+  <footer id="status" class="status"></footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

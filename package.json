@@ -1,0 +1,8 @@
+{
+  "name": "upcoming-events",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "build:events": "node scripts/build-events.mjs", "serve": "npx serve ." },
+  "dependencies": { "node-ical": "^0.20.1" }
+}
