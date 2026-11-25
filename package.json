@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "build:events": "node scripts/build-events.mjs", "serve": "npx serve ." },
+  "scripts": { "build:events": "node scripts/build-events.mjs", "build:site": "node scripts/build-site.mjs", "serve": "npx serve ." },
   "dependencies": { "node-ical": "^0.20.1" }
 }

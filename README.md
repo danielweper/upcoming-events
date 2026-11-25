@@ -4,7 +4,7 @@ A static page that shows upcoming events from a public Google Calendar: a featur
 
 ## How it works
 1. A GitHub Action (`.github/workflows/update.yml`) runs about every 10 minutes. It downloads the calendar's `.ics` feed, expands recurring events and builds `events.json` with the events of the coming `daysAhead` days.
-2. The Action deploys the page and `events.json` to GitHub Pages. `events.json` is never committed.
+2. `scripts/build-site.mjs` builds a self-contained `index.html` (CSS, JS, logo, config and the current events are inlined) and the Action deploys it to GitHub Pages together with `events.json`. Showing the page therefore takes a single request, which matters for screens that reload it often. A small service worker (`sw.js`) lets the browser reuse its saved copy of the page and `events.json` for 5 minutes without contacting GitHub, so a screen that reloads the page every few seconds doesn't hit GitHub's rate limit. `events.json` is never committed.
 3. In the browser, `app.js` reloads `events.json` every `reloadEventsEveryMinutes` minutes and re-renders every `refreshDisplayEverySeconds` seconds.
 
 Calendar changes typically show up on the page within 10–20 minutes.
@@ -41,5 +41,6 @@ The page must be served over HTTP; opening `index.html` directly from disk doesn
 ```
 npm install
 npm run build:events    # creates events.json
-npm run serve           # serves the page locally
+npm run serve           # serves the page from the sources (it fetches config.json and events.json)
+npm run build:site      # optional: builds the self-contained page in _site/, as the Action does
 ```

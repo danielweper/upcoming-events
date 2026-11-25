@@ -1,4 +1,24 @@
 (async () => {
+  // JSON loader that is gentle on the server: normal HTTP caching (no cache-busting), and the
+  // last good copy is kept in localStorage, so a failed request (e.g. HTTP 429) or an iframe reload
+  // still has data to show.
+  const store = {
+    get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+  };
+  async function getJSON(url) {
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(url + ': HTTP ' + r.status);
+      const j = await r.json();
+      store.set('ev:' + url, { t: Date.now(), j });
+      return { data: j, stale: false, at: new Date() };
+    } catch (err) {
+      const old = store.get('ev:' + url);
+      if (old && old.j) return { data: old.j, stale: true, at: new Date(old.t) };
+      throw err;
+    }
+  }
   // Scale everything (all sizes are in em) to the viewport: 1.75% of the width, limited by the
   // height so the 16:9 proportions hold. Done in JS because old kiosk browsers lack CSS clamp().
   const fit = () => {
@@ -16,10 +36,9 @@
   };
   window.addEventListener('error', (e) => fatal(e.error || e.message));
   window.addEventListener('unhandledrejection', (e) => fatal(e.reason));
-  const C = await fetch('config.json', { cache: 'no-store' }).then((r) => {
-    if (!r.ok) throw new Error('config.json: HTTP ' + r.status);
-    return r.json();
-  });
+  // The deployed page has config and events embedded (see scripts/build-site.mjs), so it renders at once
+  // without any request; when served from the sources (npm run serve) they are fetched instead.
+  const C = window.__CONFIG__ || (await getJSON('config.json')).data;
   if (typeof C.allUpcomingEvents !== 'boolean') throw new Error('config.json: "allUpcomingEvents" must be true or false');
   if (!C.allUpcomingEvents && !(Number.isInteger(C.upcomingEventLimit) && C.upcomingEventLimit >= 0)) {
     throw new Error('config.json: "upcomingEventLimit" (a whole number) is required when "allUpcomingEvents" is false');
@@ -160,12 +179,11 @@
 
   async function load() {
     try {
-      const r = await fetch(`${C.eventsFile}?t=${Date.now()}`, { cache: 'no-store' });
-      if (!r.ok) throw new Error(r.status);
-      const j = await r.json();
-      events = (j.events || []).map(parse);
-      updated = new Date();
-      fetchFailed = false;
+      const { data, stale, at } = await getJSON(C.eventsFile);
+      events = (data.events || []).map(parse);
+      updated = at;
+      fetchFailed = stale;
+      if (stale) console.warn('Using saved events; the request failed');
     } catch (err) {
       fetchFailed = true; // keep showing the last good data
       console.warn('Could not load events', err);
@@ -173,8 +191,17 @@
     render();
   }
 
+  // Lets the browser serve the page from its own storage between reloads (see sw.js). Needs https.
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
   $('title').textContent = C.pageTitle;
-  load();
+  if (window.__EVENTS__) {
+    events = (window.__EVENTS__.events || []).map(parse);
+    updated = new Date(window.__EVENTS__.updated || Date.now());
+    render();
+  } else {
+    load();
+  }
   setInterval(load, C.reloadEventsEveryMinutes * 60000);
   setInterval(render, C.refreshDisplayEverySeconds * 1000);
 })();
