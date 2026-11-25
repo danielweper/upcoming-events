@@ -1,7 +1,6 @@
 (async () => {
   // Scale everything (all sizes are in em) to the viewport: 1.75% of the width, limited by the
   // height so the 16:9 proportions hold. Done in JS because old kiosk browsers lack CSS clamp().
-  const WIDE = 900; // at or above this width the two-column layout is used
   const fit = () => {
     const w = window.innerWidth, h = window.innerHeight;
     const px = Math.max(16, Math.min(w * 0.0175, h * 0.0311, 112));
@@ -21,6 +20,10 @@
     if (!r.ok) throw new Error('config.json: HTTP ' + r.status);
     return r.json();
   });
+  if (typeof C.allUpcomingEvents !== 'boolean') throw new Error('config.json: "allUpcomingEvents" must be true or false');
+  if (!C.allUpcomingEvents && !(Number.isInteger(C.upcomingEventLimit) && C.upcomingEventLimit >= 0)) {
+    throw new Error('config.json: "upcomingEventLimit" (a whole number) is required when "allUpcomingEvents" is false');
+  }
   const $ = (id) => document.getElementById(id);
   let events = [];
   let updated = null;
@@ -81,7 +84,6 @@
 
   function render() {
     const now = new Date();
-    const wide = window.innerWidth >= WIDE;
     const upcoming = events.filter((e) => lastMoment(e) > now);
     const live = upcoming.filter((e) => e.s <= now).sort((a, b) => a.e - b.e);
     const future = upcoming.filter((e) => e.s > now);
@@ -104,10 +106,10 @@
     box.append(el('div', 'ev-when', (isLive || dayKey(featured.s) === dayKey(now) ? '' : dayLabel(featured.s, now) + ' · ') + whenText(featured)));
     if (featured.location) box.append(el('div', 'ev-where', plainText(featured.location)));
     box.append(el('div', 'ev-countdown', isLive ? `Slutter om ${countdown(featured.e - now)}` : `Starter om ${countdown(featured.s - now)}`));
-    const desc = trim(plainText(featured.description), C.descriptionMaxChars);
+    const desc = trim(plainText(featured.description), C.featuredDescriptionMaxChars);
     if (desc) box.append(el('div', 'ev-desc', desc));
 
-    const rest = upcoming.filter((e) => e !== featured).sort((a, b) => a.s - b.s).slice(0, wide ? Infinity : C.listSize);
+    const rest = upcoming.filter((e) => e !== featured).sort((a, b) => a.s - b.s).slice(0, C.allUpcomingEvents ? Infinity : C.upcomingEventLimit);
     const tbody = el('tbody');
     let lastDay = null;
     for (const e of rest) {
@@ -135,8 +137,8 @@
       list.append(table);
     }
     renderStatus(now);
-    // Wide screens: show as many events as fit without scrolling.
-    if (wide) {
+    // allUpcomingEvents: show as many events as fit on the screen without scrolling.
+    if (C.allUpcomingEvents) {
       const over = () => document.documentElement.scrollHeight > window.innerHeight + 1;
       while (over() && tbody.lastChild) {
         tbody.removeChild(tbody.lastChild);
@@ -158,7 +160,7 @@
 
   async function load() {
     try {
-      const r = await fetch(`${C.dataUrl}?t=${Date.now()}`, { cache: 'no-store' });
+      const r = await fetch(`${C.eventsFile}?t=${Date.now()}`, { cache: 'no-store' });
       if (!r.ok) throw new Error(r.status);
       const j = await r.json();
       events = (j.events || []).map(parse);
@@ -171,8 +173,8 @@
     render();
   }
 
-  $('title').textContent = C.title;
+  $('title').textContent = C.pageTitle;
   load();
-  setInterval(load, C.fetchEveryMinutes * 60000);
-  setInterval(render, C.renderEverySeconds * 1000);
+  setInterval(load, C.reloadEventsEveryMinutes * 60000);
+  setInterval(render, C.refreshDisplayEverySeconds * 1000);
 })();

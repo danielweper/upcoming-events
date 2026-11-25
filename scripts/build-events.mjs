@@ -1,6 +1,6 @@
 // Downloads the public .ics feed, expands recurring events and writes events.json
 // containing only events that are not over yet, within the next HORIZON_DAYS.
-// Usage: node scripts/build-events.mjs   (icsUrl / horizonDays / timeZone come from config.json)
+// Usage: node scripts/build-events.mjs   (icsUrl / daysAhead / timeZone come from config.json)
 
 import { readFile, writeFile } from 'node:fs/promises';
 
@@ -12,7 +12,7 @@ process.env.TZ = cfg.timeZone || 'Europe/Copenhagen';
 const { default: ical } = await import('node-ical');
 
 const ICS_URL = cfg.icsUrl;
-const HORIZON_DAYS = Number(cfg.horizonDays ?? 90);
+const HORIZON_DAYS = Number(cfg.daysAhead ?? 90);
 const OUT = new URL('../events.json', import.meta.url);
 
 const res = await fetch(ICS_URL, { redirect: 'follow' });

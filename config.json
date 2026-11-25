@@ -1,13 +1,14 @@
 {
   "icsUrl": "https://fklub.dk/ical/fember.ics",
-  "horizonDays": 90,
-  "title": "Kommende arrangementer",
+  "daysAhead": 90,
+  "pageTitle": "Kommende arrangementer",
   "locale": "da-DK",
   "timeZone": "Europe/Copenhagen",
-  "dataUrl": "events.json",
-  "fetchEveryMinutes": 5,
-  "renderEverySeconds": 15,
+  "eventsFile": "events.json",
+  "reloadEventsEveryMinutes": 5,
+  "refreshDisplayEverySeconds": 15,
   "featureActiveEvent": true,
-  "listSize": 7,
-  "descriptionMaxChars": 220
+  "allUpcomingEvents": true,
+  "upcomingEventLimit": 15,
+  "featuredDescriptionMaxChars": 220
 }
