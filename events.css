@@ -3,7 +3,7 @@
 
 /* Scale text up on large screens (TVs); phones/laptops stay at the browser default. */
 html { font-size: clamp(16px, 1.25vw, 44px); }
-body { overflow-x: hidden; }
+body { overflow-x: hidden; background-color: white; }
 
 @media (max-width: 700px) { /* phones: compact header */
   header { grid-template-columns: auto minmax(0, 1fr) auto; padding: 3px 3vw; column-gap: 2vw; }

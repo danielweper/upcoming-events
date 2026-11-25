@@ -1,5 +1,16 @@
 (async () => {
-  const C = await fetch('config.json', { cache: 'no-store' }).then((r) => r.json());
+  // Show startup errors on the page itself (kiosk browsers have no visible console).
+  const fatal = (err) => {
+    const s = document.getElementById('status');
+    if (s) { s.className = 'ev-status warn'; s.textContent = 'Fejl: ' + (err && err.message ? err.message : err); }
+    console.error(err);
+  };
+  window.addEventListener('error', (e) => fatal(e.error || e.message));
+  window.addEventListener('unhandledrejection', (e) => fatal(e.reason));
+  const C = await fetch('config.json', { cache: 'no-store' }).then((r) => {
+    if (!r.ok) throw new Error('config.json: HTTP ' + r.status);
+    return r.json();
+  });
   const $ = (id) => document.getElementById(id);
   let events = [];
   let updated = null;
@@ -13,6 +24,7 @@
   // Browser-local time zone (no timeZone option), unlike the event times above.
   const stampF = new Intl.DateTimeFormat(C.locale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 
+  const clear = (n) => { while (n.firstChild) n.removeChild(n.firstChild); };
   const dayKey = (d) => dayKeyF.format(d);
   const el = (tag, cls, text) => {
     const n = document.createElement(tag);
@@ -67,8 +79,8 @@
 
     const box = $('featured');
     const list = $('list');
-    box.replaceChildren();
-    list.replaceChildren();
+    clear(box);
+    clear(list);
 
     if (!featured) {
       box.className = 'ev-empty';
