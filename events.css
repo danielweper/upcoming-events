@@ -1,8 +1,13 @@
 /* Page-specific styles, in the same plain style as stregdle.fklub.dk
    (same inline <style> conventions: .sdl-* → .ev-*, grey #666 notes, #5f8f5b green, outset/inset borders). */
 
-/* Scale text up on large screens (TVs); phones/laptops stay at the browser default. */
-html { font-size: clamp(16px, 1.25vw, 44px); }
+/* Scale text up on large screens (TVs); app.js (fit()) sets the exact size, this is the fallback before it runs. */
+html { font-size: 16px; }
+@media (min-width: 1280px) { html { font-size: 1.75vw; } }
+
+/* Flat copies of the nested rules in stregsystem.css (CSS nesting needs Chrome 112+). */
+header .left { justify-self: start; }
+header .right { justify-self: end; }
 body { overflow-x: hidden; background-color: white; }
 
 @media (max-width: 700px) { /* phones: compact header */
@@ -10,16 +15,17 @@ body { overflow-x: hidden; background-color: white; }
   header .logo { height: 2.2em; }
 }
 
-header .logo { height: 3.2em; width: auto; display: block; }
+header .logo { height: 5.76em; width: auto; display: block; }
 
 .ev-wrap {
-  max-width: 1700px; margin: 1.5em auto 2em; padding: 0 1.5em;
-  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2em; align-items: start;
+  max-width: 110em; margin: 1.5em auto 2em; padding: 0 1.5em;
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-gap: 2em; gap: 2em; align-items: start;
 }
 @media (max-width: 900px) { .ev-wrap { grid-template-columns: minmax(0, 1fr); } }
 
 /* Featured event */
-.ev-featured { border: 1px outset black; padding: 1.2em 1.5em; display: flex; flex-direction: column; gap: .5em; }
+.ev-featured { border: 1px outset black; padding: 1.2em 1.5em; display: flex; flex-direction: column; }
+.ev-featured > * + * { margin-top: .5em; }
 .ev-featured h2 { margin: .1em 0; font-size: 2.4em; line-height: 1.1; overflow-wrap: anywhere; }
 .ev-when { font-size: 1.4em; font-weight: bold; }
 .ev-where { font-size: 1.15em; color: #666; }

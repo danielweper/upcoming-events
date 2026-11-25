@@ -1,4 +1,14 @@
 (async () => {
+  // Scale everything (all sizes are in em) to the viewport: 1.75% of the width, limited by the
+  // height so the 16:9 proportions hold. Done in JS because old kiosk browsers lack CSS clamp().
+  const WIDE = 900; // at or above this width the two-column layout is used
+  const fit = () => {
+    const w = window.innerWidth, h = window.innerHeight;
+    const px = Math.max(16, Math.min(w * 0.0175, h * 0.0311, 112));
+    document.documentElement.style.fontSize = px + 'px';
+  };
+  fit();
+  window.addEventListener('resize', () => { fit(); render(); });
   // Show startup errors on the page itself (kiosk browsers have no visible console).
   const fatal = (err) => {
     const s = document.getElementById('status');
@@ -71,7 +81,7 @@
 
   function render() {
     const now = new Date();
-    
+    const wide = window.innerWidth >= WIDE;
     const upcoming = events.filter((e) => lastMoment(e) > now);
     const live = upcoming.filter((e) => e.s <= now).sort((a, b) => a.e - b.e);
     const future = upcoming.filter((e) => e.s > now);
@@ -97,7 +107,7 @@
     const desc = trim(plainText(featured.description), C.descriptionMaxChars);
     if (desc) box.append(el('div', 'ev-desc', desc));
 
-    const rest = upcoming.filter((e) => e !== featured).sort((a, b) => a.s - b.s).slice(0, C.listSize);
+    const rest = upcoming.filter((e) => e !== featured).sort((a, b) => a.s - b.s).slice(0, wide ? Infinity : C.listSize);
     const tbody = el('tbody');
     let lastDay = null;
     for (const e of rest) {
@@ -125,6 +135,14 @@
       list.append(table);
     }
     renderStatus(now);
+    // Wide screens: show as many events as fit without scrolling.
+    if (wide) {
+      const over = () => document.documentElement.scrollHeight > window.innerHeight + 1;
+      while (over() && tbody.lastChild) {
+        tbody.removeChild(tbody.lastChild);
+        if (tbody.lastChild && tbody.lastChild.firstChild.className === 'ev-day') tbody.removeChild(tbody.lastChild);
+      }
+    }
   }
 
   function renderStatus(now) {
