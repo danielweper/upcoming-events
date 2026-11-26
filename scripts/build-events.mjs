@@ -15,9 +15,23 @@ const ICS_URL = cfg.icsUrl;
 const HORIZON_DAYS = Number(cfg.daysAhead ?? 90);
 const OUT = new URL('../events.json', import.meta.url);
 
-const res = await fetch(ICS_URL, { redirect: 'follow' });
-if (!res.ok) throw new Error(`Feed request failed: ${res.status} ${res.statusText}`);
-const data = ical.sync.parseICS(await res.text());
+// The feed (a redirect to Google Calendar) is occasionally slow or returns 5xx/429, so retry.
+async function fetchFeed(attempts = 5) {
+  for (let i = 1; ; i++) {
+    try {
+      const res = await fetch(ICS_URL, { redirect: 'follow', signal: AbortSignal.timeout(30000) });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const body = await res.text();
+      if (!body.includes('BEGIN:VCALENDAR')) throw new Error('response is not an iCalendar feed');
+      return body;
+    } catch (err) {
+      if (i >= attempts) throw new Error(`Feed request failed after ${attempts} attempts: ${err.message}`);
+      console.warn(`Feed attempt ${i} failed (${err.message}); retrying...`);
+      await new Promise((r) => setTimeout(r, 2000 * i));
+    }
+  }
+}
+const data = ical.sync.parseICS(await fetchFeed());
 
 const now = new Date();
 const horizon = new Date(now.getTime() + HORIZON_DAYS * 864e5);

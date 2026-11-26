@@ -9,19 +9,17 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Never cancel a run that is mid-deploy: a cancelled Pages deployment can leave
+# the next one failing. Queued runs are replaced by the newest one instead.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,5 +32,19 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: _site }
+
+  # Separate job: it only starts once the build job has finished and the
+  # artifact is fully uploaded, so it can never see a half-created artifact.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
