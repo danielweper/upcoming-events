@@ -56,6 +56,26 @@ function push(ev, start, end) {
   });
 }
 
+// rrule returns occurrences as "floating" times: the local wall-clock time of the event
+// stored in UTC fields (e.g. 16:15 local -> 16:15Z). Turn that wall-clock time into the real
+// instant in the event's time zone, so it follows daylight saving time (16:15 stays 16:15
+// whether it is +01:00 in winter or +02:00 in summer).
+function wallToInstant(wall, tz) {
+  const guess = wall.getTime();
+  const offsetAt = (t) => {
+    const p = Object.fromEntries(
+      new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+      }).formatToParts(new Date(t)).map((x) => [x.type, x.value]),
+    );
+    return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - Math.floor(t / 1000) * 1000;
+  };
+  let t = guess - offsetAt(guess);
+  t = guess - offsetAt(t); // second pass settles times near a DST switch
+  return new Date(t);
+}
+
 for (const ev of Object.values(data)) {
   if (ev.type !== 'VEVENT' || !ev.start) continue;
   const duration = ev.end ? ev.end - ev.start : 0;
@@ -65,8 +85,11 @@ for (const ev of Object.values(data)) {
     continue;
   }
 
-  for (const occ of ev.rrule.between(lookback, horizon, true)) {
-    const key = occ.toISOString().slice(0, 10);
+  const tz = ev.rrule.options?.tzid || (ev.datetype === 'date' ? process.env.TZ : null);
+  const pad = 36e5 * 14; // widen the window: floating times are up to a few hours off UTC
+  for (const raw of ev.rrule.between(new Date(lookback - pad), new Date(+horizon + pad), true)) {
+    const key = raw.toISOString().slice(0, 10);
+    const occ = tz ? wallToInstant(raw, tz) : raw;
     const override = ev.recurrences?.[key];
     if (!override && ev.exdate && (ev.exdate[key] || ev.exdate[occ.toISOString()])) continue;
     if (override) {
